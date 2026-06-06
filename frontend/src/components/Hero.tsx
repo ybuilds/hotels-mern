@@ -1,8 +1,10 @@
 const Hero = () => {
     return (
-        <div className="flex flex-col text-white my-10">
-            <span className="text-5xl font-bold">Find your next stay</span>
-            <span className="text-2xl">Search low prices on hotels for your dream vacation...</span>
+        <div className="bg-blue-800 pb-16">
+            <div className="container mx-auto flex flex-col text-white">
+                <h1 className="text-5xl font-bold">Find your next stay</h1>
+                <span className="text-2xl">Search low prices on hotels for your dream vacation...</span>
+            </div>
         </div>
     );
 };

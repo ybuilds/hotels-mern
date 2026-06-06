@@ -9,13 +9,14 @@ const Header = () => {
                     <Link to={"/"}>ElegantHolidays.in</Link>
                 </span>
 
-                <span className="flex space-x-2">
-                    <Link className="flex items-center rounded bg-white text-blue-600 px-4 font-bold hover:bg-gray-100 hover:text-blue-800 transition" to={"/sign-in"}>Sign In</Link>
-                </span>
-            </div>
-
-            <div className="container mx-auto">
-                <Hero/>
+                <div className="flex gap-4">
+                    <span className="flex space-x-2">
+                        <Link className="flex items-center rounded bg-white text-blue-600 px-4 font-bold hover:bg-gray-100 hover:text-blue-800 transition" to={"/sign-in"}>Log In</Link>
+                    </span>
+                    <span className="flex space-x-2">
+                        <Link className="flex items-center rounded bg-white text-blue-600 px-4 font-bold hover:bg-gray-100 hover:text-blue-800 transition" to={"/sign-in"}>Sign In</Link>
+                    </span>
+                </div>
             </div>
         </div>
     );
