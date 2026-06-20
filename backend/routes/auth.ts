@@ -1,31 +1,32 @@
 import express from "express";
-import jwt from "jsonwebtoken";
-import User from "../models/User.ts";
 import { check, validationResult } from "express-validator";
+import User from "../models/User.ts";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.post("/register", [
-  check("firstName", "First name is required").isString(),
-  check("lastName", "Last name is required").isString(),
-  check("password", "Password is required").isLength({min: 8, max: 20}),
-  check("email", "Email name is required").isEmail()
+router.post("/signin", [
+  check("email", "Email is required").isEmail(),
+  check("password", "Password with 8 or more characters required").isLength({min: 8, max: 20})
 ], async (req: express.Request, res: express.Response) => {
   const err = validationResult(req);
   if(!err.isEmpty())
     return res.status(400).json({"message": err.array()});
+
+  const { email, password } = req.body;
   
   try {
-    let user = await User.findOne({
-      email: req.body.email
-    });
+    const user = await User.findOne({email});
+    
+    if(!user)
+      return res.status(400).json({message: "Invalid credentials"});
 
-    if(user)
-      return res.status(400).json({"message": "user already exists"});
-
-    user = new User(req.body);
-    await user.save();
-
+    const isMatch = await bcrypt.compare(password, user?.password);
+    
+    if(!isMatch)
+      return res.status(400).json({message: "Invalid credentials"});
+    
     const token = jwt.sign({userId: user.id}, process.env.JWT_SECRET_KEY as string, {expiresIn: "1d"});
     
     res.cookie("authToken", token, {
@@ -34,8 +35,9 @@ router.post("/register", [
       maxAge: 86400 * 1000
     });
 
-    return res.status(201).json({message: "user created"});
+    res.status(200).json({userId: user._id});
   } catch(err) {
+    console.log(err);
     return res.status(500).json({message: "something went wrong"});
   }
 });
